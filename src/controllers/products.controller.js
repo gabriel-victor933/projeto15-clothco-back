@@ -1,5 +1,5 @@
 import { db } from "../database/database.connection.js";
-const products = [
+/* const products = [
   {
     title: "Wool Creator Cap - Black",
     price: 44,
@@ -171,7 +171,18 @@ const products = [
     type: "Tee",
     description: ["Short-sleeve t-shirt with printed Logo Block graphic on chest.", "100% cotton."],
   },
-];
-export const getProducts = (req, res) => {
-  res.status(200).send(products);
+]; */
+
+
+export const getProducts = async (req, res) => {
+
+  try {
+    const data = await db.collection("products").find().toArray()
+
+    res.status(200).send(data);
+
+  }catch(err){
+    res.status(500).send(err)
+  }
+  
 };

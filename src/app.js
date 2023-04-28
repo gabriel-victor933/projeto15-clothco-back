@@ -7,6 +7,7 @@ server.use(express.json());
 server.use(cors());
 server.use(router);
 
-server.listen(5000, () => {
-  console.log("http://localhost:5000");
+
+server.listen(process.env.PORT, () => {
+  console.log(`http://localhost:${process.env.PORT}`);
 });
