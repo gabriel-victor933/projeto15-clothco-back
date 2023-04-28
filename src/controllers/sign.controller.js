@@ -22,6 +22,7 @@ export const postRegister = async (req, res) => {
     console.log("Error creating user: ", err);
   }
 };
+
 export const postLogin = async (req, res) => {
   const { email, password } = req.body;
   try {

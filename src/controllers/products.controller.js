@@ -175,7 +175,3 @@ const products = [
 export const getProducts = (req, res) => {
   res.status(200).send(products);
 };
-export const postLogin = (req, res) => {
-  console.log("login");
-  res.send("login");
-};
