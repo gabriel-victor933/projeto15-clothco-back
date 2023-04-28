@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { db } from "../database/database.connection.js";
 /* const products = [
   {
@@ -177,7 +178,29 @@ import { db } from "../database/database.connection.js";
 export const getProducts = async (req, res) => {
 
   try {
-    const data = await db.collection("products").find().toArray()
+    const options = {projection:{description:0,color:0,type:0,quantity:0}}
+
+    const data = await db.collection("products").find({},options).toArray()
+
+    res.status(200).send(data);
+
+  }catch(err){
+    res.status(500).send(err)
+  }
+  
+};
+
+export const getOneProduct = async (req, res) => {
+
+  const {id} = req.params
+
+  if(!ObjectId.isValid(id)){
+    return res.status(401).send("ID inválido")
+}
+
+  try {
+  
+    const [data] = await db.collection("products").find({_id: new ObjectId(id)}).toArray()
 
     res.status(200).send(data);
 
