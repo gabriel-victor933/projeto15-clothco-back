@@ -26,12 +26,9 @@ export async function postCartItem(req,res){
         const [product] = await db.collection("products").find({_id: new ObjectId(productId)}).toArray()
         if (!product) return res.status(401).send("product not found");
 
-        const order = {token, productId, quantity}
-        const result = await db.collection("cart").insertOne(order)
+        const order = {productId, quantity}
 
-        if (!result.insertedId) {
-            return res.status(500).send("server error");
-          }
+        await db.collection("users").updateOne(user,  { $push: {cart: order} } )
 
         return res.status(201).send("added to cart")
 
