@@ -28,15 +28,24 @@ export async function postCartItem(req,res){
     if(quantity < 1) return res.status(400).send("quantity must be greater than zero")
 
     try{
-        const user = await db.collection("users").find({token: token})
+        const [user] = await db.collection("users").find({token: token}).toArray()
         if (!user) return res.status(401).send("user not logged in");
 
         const [product] = await db.collection("products").find({_id: new ObjectId(productId)}).toArray()
         if (!product) return res.status(401).send("product not found");
 
-        const order = {productId, quantity, title: product.title, price: product.price, img: product.img}
+        const index = user.cart?.findIndex((item) => item.productId === productId)
 
-        await db.collection("users").updateOne({token},  { $push: {cart: order} } )
+         if(index === -1 || index === undefined){
+            const order = {productId, quantity, title: product.title, price: product.price, img: product.img}
+            await db.collection("users").updateOne({token},  { $push: {cart: order} } )
+
+        } else {
+
+            const sum = user.cart[index].quantity + quantity;
+
+            await db.collection("users").updateOne({token, "cart.productId": productId},  { $set: { "cart.$.quantity": sum }  } )
+        }  
 
         return res.status(201).send("added to cart")
 
