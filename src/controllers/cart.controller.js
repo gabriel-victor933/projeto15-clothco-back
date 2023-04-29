@@ -7,8 +7,10 @@ export async function getCartItem(req,res){
     const token = req.headers?.authorization.replace("Bearer ","")
 
     try{
+        const [user] = await db.collection("users").find({token: token}).toArray()
+        if (!user) return res.status(401).send("user not logged in");
 
-        return res.send(user)
+        return res.status(200).send(user.cart)
     }catch(err){
         return res.status(500).send("server error")
     }
@@ -29,14 +31,14 @@ export async function postCartItem(req,res){
         const user = await db.collection("users").find({token: token})
         if (!user) return res.status(401).send("user not logged in");
 
-        const product = await db.collection("products").find({_id: new ObjectId(productId)})
+        const [product] = await db.collection("products").find({_id: new ObjectId(productId)}).toArray()
         if (!product) return res.status(401).send("product not found");
 
-        const order = {productId, quantity}
+        const order = {productId, quantity, title: product.title, price: product.price, img: product.img}
 
-        const result = await db.collection("users").updateOne({token},  { $push: {cart: order} } )
+        await db.collection("users").updateOne({token},  { $push: {cart: order} } )
 
-        return res.status(201).send(result)
+        return res.status(201).send("added to cart")
 
     }catch(err){
 
