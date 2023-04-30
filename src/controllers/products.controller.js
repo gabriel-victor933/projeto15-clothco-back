@@ -24,6 +24,8 @@ import { db } from "../database/database.connection.js";
     quantity: 10,
     img: "/cap-orange-back.jpg",
     imgb: "/cap-orange-front.jpg",
+    img: "/cap-orange-front.jpg",
+    imgb: "/cap-orange-back.jpg",
     color: "Orange",
     type: "Headwear",
     description: [
@@ -38,6 +40,8 @@ import { db } from "../database/database.connection.js";
     quantity: 10,
     img: "/cap-pink-back.jpg",
     imgb: "/cap-pink-front.jpg",
+    img: "/cap-pink-front.jpg",
+    imgb: "/cap-pink-back.jpg",
     color: "Pink",
     type: "Headwear",
     description: [
@@ -55,6 +59,8 @@ import { db } from "../database/database.connection.js";
     quantity: 10,
     img: "/cap-yellow-back.jpg",
     imgb: "/cap-yellow-front.jpg",
+    img: "/cap-yellow-front.jpg",
+    imgb: "/cap-yellow-back.jpg",
     color: "Yellow",
     type: "Headwear",
     description: [
