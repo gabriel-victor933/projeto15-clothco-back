@@ -36,9 +36,9 @@ export async function postOrder(req,res){
 
         await db.collection("products").bulkWrite(updates);
        
-        await db.collection("orders").insertOne(order)
-        
-        return res.status(200).send("pedido realizado com sucesso")
+        const response = await db.collection("orders").insertOne(order)
+        console.log(response.insertedId)
+        return res.status(200).send(response.insertedId)
     } catch(err){
 
         return res.status(500).send("server error")
@@ -46,21 +46,37 @@ export async function postOrder(req,res){
     
 }
 
-export async function getOrder(req,res){
-    
-    //pegar token
-    //buscar id do usuario
-    //buscar pedido que possua o id
-    //enviar pedidos
+export async function getOrder(req,res){    
 
     const token  = req.headers.authorization.replace("Bearer ", "")
 
     try{
         const user = await db.collection("users").findOne({token},{projection:{_id:true}})
-        console.log(user._id)
         const orders = await db.collection("orders").find({userId: user._id}).toArray()
 
         return res.send(orders)
+
+    } catch(err){
+        return res.status(500).send("server error")
+    }
+}
+
+export async function getOneOrder(req,res){
+    
+    const token  = req.headers.authorization.replace("Bearer ", "")
+
+    const {id} = req.params
+
+    if(!ObjectId.isValid(id)){
+        return res.status(401).send("ID inválido")
+    }
+
+    try{
+        const user = await db.collection("users").findOne({token},{projection:{_id:true}})
+
+        const order = await db.collection("orders").findOne({_id: new ObjectId(id), userId: user._id, })
+
+        return res.send(order)
 
     } catch(err){
         return res.status(500).send("server error")
