@@ -36,7 +36,6 @@ export const postLogin = async (req, res) => {
     await db.collection("users").updateOne(user, { $set: { token: token } });
 
     res.status(200).send(token);
-    res.send(token);
   } catch (err) {
     console.log("Error logging in: ", err);
     console.log(err);

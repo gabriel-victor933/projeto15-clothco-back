@@ -1,7 +1,6 @@
 import {db} from "../database/database.connection.js"
 import { ObjectId } from "mongodb"
 
-
 export async function getCartItem(req,res){
 
     const token = req.headers?.authorization.replace("Bearer ","")
