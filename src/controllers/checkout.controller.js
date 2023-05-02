@@ -14,10 +14,10 @@ export async function postOrder(req,res){
     })
 
     try{
-        const user = await db.collection("users").findOne({token},{projection:{_id:true}})
+        const user = await db.collection("users").findOne({token},{projection:{_id:true,}})
         if (!user) return res.status(401).send("user not logged in");
 
-        const productsIds = products.map((product)=>({_id: new ObjectId(product._id)}))
+        const productsIds = products.map((product)=>({_id: new ObjectId(product.id)}))
         const stock = await db.collection("products").find({$or: productsIds}).sort({_id: 1}).toArray()
 
         const order = {products:[],total:0,userId: user._id}
@@ -30,7 +30,7 @@ export async function postOrder(req,res){
             const newQuantity = stock[i].quantity - products[i].quantity
             updates.push({updateOne:{filter: {_id:stock[i]._id},update:{$set: {quantity: newQuantity}}}})
 
-            order.products.push({_id: products[i]._id, quantity: products[i].quantity, price: stock[i].price})
+            order.products.push({title: stock[i].title, quantity: products[i].quantity, price: stock[i].price})
             order.total += products[i].quantity*stock[i].price;
         }
 
